@@ -3,267 +3,323 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Codebase Onboarding Prompt Builder</title>
+<title>Codebase Brief — Prompt Builder</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=Syne:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0e0f11;
-    --surface: #16181c;
-    --surface2: #1e2028;
-    --border: #2a2d35;
-    --text: #e8eaf0;
-    --muted: #6b7080;
-    --accent: #7c6af7;
-    --accent2: #3dd6c0;
-    --warn: #f0a040;
-    --mono: 'IBM Plex Mono', monospace;
-    --sans: 'Syne', sans-serif;
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 15px; }
-  body { min-height: 100vh; padding: 0; display: flex; gap: 0; }
+:root {
+  --bg: #0c0d10;
+  --s1: #13151a;
+  --s2: #1a1d24;
+  --s3: #22262f;
+  --border: #2c303a;
+  --border2: #383c48;
+  --text: #dde1ec;
+  --muted: #5e6478;
+  --faint: #353945;
+  --accent: #6e5ef5;
+  --accent-dim: #1f1b40;
+  --accent-text: #a99eff;
+  --green: #34d399;
+  --green-dim: #0a2018;
+  --amber: #f59e0b;
+  --amber-dim: #251800;
+  --red: #f87171;
+  --red-dim: #230a0a;
+  --sky: #38bdf8;
+  --sky-dim: #051624;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'Syne', sans-serif;
+  --radius: 8px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--bg); color: var(--text); font-family: var(--sans); }
+body { display: flex; min-height: 100vh; }
 
-  /* LEFT PANEL */
-  #config-panel {
-    width: 400px;
-    min-width: 340px;
-    max-width: 420px;
-    height: 100vh;
-    overflow-y: auto;
-    position: sticky;
-    top: 0;
-    background: var(--surface);
-    border-right: 1px solid var(--border);
-    padding: 28px 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--faint); border-radius: 2px; }
 
-  #config-panel h1 {
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-    color: var(--text);
-  }
-  #config-panel .subtitle {
-    font-size: 12px;
-    color: var(--muted);
-    font-family: var(--mono);
-    margin-top: 4px;
-  }
+/* ── LEFT CONFIG ── */
+#left {
+  width: 380px;
+  min-width: 320px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  overflow-y: auto;
+  background: var(--s1);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 20px 32px;
+  gap: 18px;
+}
 
-  .field-label {
-    font-size: 11px;
-    font-family: var(--mono);
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    margin-bottom: 8px;
-  }
+.logo {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.logo-mark {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: var(--text);
+}
+.logo-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  background: var(--s3);
+  padding: 2px 7px;
+  border-radius: 3px;
+}
 
-  textarea, input[type=text] {
-    width: 100%;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 12px;
-    padding: 10px 12px;
-    resize: vertical;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-  textarea:focus, input[type=text]:focus { border-color: var(--accent); }
+.sep { height: 1px; background: var(--border); }
 
-  .chip-group { display: flex; flex-wrap: wrap; gap: 6px; }
-  .chip {
-    padding: 5px 12px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-family: var(--mono);
-    cursor: pointer;
-    border: 1px solid var(--border);
-    background: var(--bg);
-    color: var(--muted);
-    transition: all 0.15s;
-    user-select: none;
-  }
-  .chip:hover { border-color: var(--accent); color: var(--text); }
-  .chip.on { background: #2a2560; border-color: var(--accent); color: #c0b8ff; }
+.field { display: flex; flex-direction: column; gap: 7px; }
+.field-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
 
-  .divider { height: 1px; background: var(--border); }
+textarea, input[type=text] {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 9px 12px;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.15s;
+  width: 100%;
+}
+textarea:focus, input[type=text]:focus { border-color: var(--accent); }
+textarea::placeholder, input::placeholder { color: var(--muted); }
 
-  /* PHASE ITEMS */
-  .phase-item {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  .phase-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    cursor: pointer;
-    user-select: none;
-  }
-  .phase-header:hover { background: var(--surface2); }
-  .phase-badge {
-    font-family: var(--mono);
-    font-size: 11px;
-    font-weight: 500;
-    width: 22px;
-    height: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-    flex-shrink: 0;
-  }
-  .phase-name { font-size: 13px; font-weight: 500; flex: 1; }
-  .phase-toggle { font-size: 10px; color: var(--muted); transition: transform 0.2s; }
-  .phase-toggle.open { transform: rotate(180deg); }
-  .phase-opts {
-    display: none;
-    padding: 4px 14px 12px;
-    border-top: 1px solid var(--border);
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-  .phase-opts.visible { display: flex; }
+.chip-row { display: flex; flex-wrap: wrap; gap: 5px; }
+.chip {
+  padding: 4px 11px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-family: var(--mono);
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--muted);
+  user-select: none;
+  transition: all 0.12s;
+}
+.chip:hover { border-color: var(--border2); color: var(--text); }
+.chip.on { background: var(--accent-dim); border-color: var(--accent); color: var(--accent-text); }
 
-  /* GENERATE BTN */
-  #gen-btn {
-    width: 100%;
-    padding: 12px;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    font-family: var(--sans);
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    letter-spacing: 0.2px;
-    transition: opacity 0.15s, transform 0.1s;
-    margin-top: 4px;
-  }
-  #gen-btn:hover { opacity: 0.88; }
-  #gen-btn:active { transform: scale(0.98); }
+/* ── SECTION TOGGLES ── */
+.section-group { display: flex; flex-direction: column; gap: 6px; }
+.section-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  user-select: none;
+  transition: border-color 0.12s;
+}
+.section-item:hover { border-color: var(--border2); }
+.section-item.on { border-color: var(--accent); background: var(--accent-dim); }
+.section-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--faint);
+  flex-shrink: 0;
+  transition: background 0.12s;
+}
+.section-item.on .section-dot { background: var(--accent); }
+.section-name { font-size: 12px; font-weight: 500; flex: 1; }
+.section-item.on .section-name { color: var(--accent-text); }
+.section-desc { font-family: var(--mono); font-size: 10px; color: var(--muted); }
 
-  /* RIGHT PANEL */
-  #output-panel {
-    flex: 1;
-    height: 100vh;
-    overflow-y: auto;
-    padding: 28px 32px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
+/* ── DEPTH TOGGLE ── */
+.depth-row { display: flex; gap: 6px; }
+.depth-btn {
+  flex: 1;
+  padding: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 11px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.12s;
+  user-select: none;
+}
+.depth-btn:hover { border-color: var(--border2); color: var(--text); }
+.depth-btn.on { background: var(--accent-dim); border-color: var(--accent); color: var(--accent-text); }
 
-  .output-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-  .output-title { font-size: 14px; font-weight: 500; color: var(--muted); font-family: var(--mono); }
+/* ── GENERATE ── */
+#gen-btn {
+  width: 100%;
+  padding: 13px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+  letter-spacing: 0.2px;
+  margin-top: 4px;
+}
+#gen-btn:hover { opacity: 0.88; }
+#gen-btn:active { transform: scale(0.98); }
 
-  #copy-btn {
-    padding: 8px 20px;
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  #copy-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+/* ── RIGHT OUTPUT ── */
+#right {
+  flex: 1;
+  height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 28px 32px;
+  gap: 16px;
+}
 
-  #output-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 24px 28px;
-    font-family: var(--mono);
-    font-size: 12.5px;
-    line-height: 1.75;
-    color: #c8cad8;
-    white-space: pre-wrap;
-    flex: 1;
-    min-height: 400px;
-  }
-  #output-box .ph-head { color: var(--accent); font-weight: 500; }
-  #output-box .ph-sect { color: var(--accent2); }
-  #output-box .ph-bullet { color: var(--warn); }
+.out-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.out-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+}
+.out-actions { display: flex; gap: 8px; align-items: center; }
 
-  #empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    min-height: 400px;
-    gap: 12px;
-    text-align: center;
-    color: var(--muted);
-  }
-  #empty-state .big { font-size: 40px; opacity: 0.3; }
-  #empty-state p { font-size: 13px; font-family: var(--mono); max-width: 320px; line-height: 1.6; }
+.tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+.tag-green { background: var(--green-dim); color: var(--green); }
+.tag-amber { background: var(--amber-dim); color: var(--amber); }
 
-  .tip-box {
-    background: #1a1d24;
-    border: 1px solid #2a3040;
-    border-left: 3px solid var(--accent);
-    border-radius: 6px;
-    padding: 12px 16px;
-    font-size: 12px;
-    font-family: var(--mono);
-    color: var(--muted);
-    line-height: 1.6;
-  }
-  .tip-box strong { color: var(--accent); }
+#copy-btn {
+  padding: 7px 16px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+#copy-btn:hover { border-color: var(--green); color: var(--green); }
 
-  ::-webkit-scrollbar { width: 5px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+/* ── OUTPUT BOX ── */
+#out {
+  flex: 1;
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.8;
+  color: #9ca3b8;
+  white-space: pre-wrap;
+  min-height: 300px;
+}
+/* syntax colours */
+.t-h1  { color: #6e5ef5; font-weight: 500; }
+.t-h2  { color: #a99eff; font-weight: 500; }
+.t-h3  { color: #7dd3fc; }
+.t-key { color: #f59e0b; }
+.t-cb  { color: #34d399; }
+.t-dim { color: #3d4255; }
+.t-em  { color: #f87171; font-style: italic; }
 
-  @media (max-width: 800px) {
-    body { flex-direction: column; }
-    #config-panel { width: 100%; max-width: 100%; height: auto; position: static; }
-    #output-panel { height: auto; }
-  }
+/* ── EMPTY STATE ── */
+#empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  gap: 14px;
+  text-align: center;
+}
+.e-icon { font-size: 36px; opacity: 0.15; }
+.e-title { font-size: 14px; color: var(--muted); font-weight: 500; }
+.e-sub { font-family: var(--mono); font-size: 11px; color: var(--faint); max-width: 300px; line-height: 1.6; }
+
+/* ── HINT BAR ── */
+.hint {
+  background: var(--s2);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 11px 16px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+.hint strong { color: var(--accent-text); }
+
+/* ── CHAR COUNT ── */
+#char-count { font-family: var(--mono); font-size: 10px; color: var(--faint); }
+
+@media (max-width: 780px) {
+  body { flex-direction: column; }
+  #left { width: 100%; height: auto; position: static; }
+  #right { height: auto; }
+}
 </style>
 </head>
 <body>
 
-<!-- LEFT PANEL -->
-<div id="config-panel">
+<!-- ══ LEFT ══ -->
+<div id="left">
   <div>
-    <h1>Codebase Onboarding</h1>
-    <p class="subtitle">// prompt builder for microservices</p>
+    <div class="logo">
+      <span class="logo-mark">codebase brief</span>
+      <span class="logo-tag">single-phase</span>
+    </div>
+    <p style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:6px;">one prompt · complete understanding</p>
   </div>
 
-  <div class="divider"></div>
+  <div class="sep"></div>
 
   <!-- Service -->
-  <div>
-    <div class="field-label">Service name &amp; description</div>
-    <textarea id="svc" rows="2" placeholder="e.g. payment-service — handles billing, subscriptions, invoice generation"></textarea>
+  <div class="field">
+    <div class="field-label">Service name &amp; purpose</div>
+    <textarea id="svc" rows="2" placeholder="e.g. order-service — manages order lifecycle from cart to fulfillment"></textarea>
   </div>
 
   <!-- Stack -->
-  <div>
+  <div class="field">
     <div class="field-label">Tech stack</div>
-    <div class="chip-group" style="margin-bottom: 8px;">
+    <div class="chip-row" style="margin-bottom:6px">
       <span class="chip" data-g="stack">Node.js</span>
       <span class="chip" data-g="stack">Python</span>
       <span class="chip" data-g="stack">Go</span>
@@ -273,435 +329,459 @@
       <span class="chip" data-g="stack">Rust</span>
       <span class="chip" data-g="stack">.NET</span>
     </div>
-    <input type="text" id="stack-extra" placeholder="DB, broker, cache (e.g. PostgreSQL, Kafka, Redis)">
+    <input type="text" id="stack-extra" placeholder="DB, broker, cache (e.g. Postgres, Kafka, Redis)">
   </div>
 
-  <!-- Role -->
-  <div>
-    <div class="field-label">My goal in this service</div>
-    <div class="chip-group">
+  <!-- Goal -->
+  <div class="field">
+    <div class="field-label">My goal</div>
+    <div class="chip-row">
       <span class="chip on" data-g="role">Add a feature</span>
       <span class="chip" data-g="role">Fix a bug</span>
-      <span class="chip" data-g="role">Refactor / improve</span>
+      <span class="chip" data-g="role">Refactor</span>
       <span class="chip" data-g="role">Performance audit</span>
       <span class="chip" data-g="role">Security review</span>
       <span class="chip" data-g="role">Onboard as maintainer</span>
     </div>
   </div>
 
-  <div class="divider"></div>
+  <div class="sep"></div>
 
-  <div class="field-label">Prompt phases — toggle sections on/off</div>
-
-  <div id="phases-list" style="display:flex;flex-direction:column;gap:8px;"></div>
-
-  <button id="gen-btn" onclick="generate()">Generate prompt →</button>
-</div>
-
-<!-- RIGHT PANEL -->
-<div id="output-panel">
-  <div class="output-header">
-    <span class="output-title">// generated prompt</span>
-    <button id="copy-btn" onclick="copyPrompt()">Copy to clipboard</button>
+  <!-- Sections -->
+  <div class="field">
+    <div class="field-label">Brief sections — toggle what to include</div>
+    <div class="section-group" id="section-list"></div>
   </div>
 
-  <div id="output-box">
-    <div id="empty-state">
-      <div class="big">◈</div>
-      <p>Configure your service details on the left, then click <strong>Generate prompt</strong>.</p>
-      <p style="margin-top:8px;font-size:11px;">Paste the result into a new Claude conversation with your codebase attached — or use in Claude Code.</p>
+  <!-- Depth -->
+  <div class="field">
+    <div class="field-label">Output depth</div>
+    <div class="depth-row">
+      <div class="depth-btn" data-d="concise" onclick="setDepth(this)">concise</div>
+      <div class="depth-btn on" data-d="standard" onclick="setDepth(this)">standard</div>
+      <div class="depth-btn" data-d="deep" onclick="setDepth(this)">deep dive</div>
     </div>
   </div>
 
-  <div class="tip-box">
-    <strong>How to use:</strong> Paste the generated prompt into a fresh Claude chat. Attach your codebase via drag-and-drop, or use <code>claude --add ./src</code> in Claude Code. Work through phases 1–8 sequentially — ask follow-up questions at each phase before moving to the next.
+  <button id="gen-btn" onclick="generate()">Generate brief prompt →</button>
+</div>
+
+<!-- ══ RIGHT ══ -->
+<div id="right">
+  <div class="out-bar">
+    <span class="out-label">// generated prompt</span>
+    <div class="out-actions">
+      <span id="char-count"></span>
+      <span id="tag-mode" class="tag tag-green">single phase</span>
+      <button id="copy-btn" onclick="copyPrompt()">Copy to clipboard</button>
+    </div>
+  </div>
+
+  <div id="out">
+    <div id="empty">
+      <div class="e-icon">◈</div>
+      <div class="e-title">Your prompt will appear here</div>
+      <div class="e-sub">Fill in the service details on the left, then click generate. Paste the result into Claude with your codebase attached.</div>
+    </div>
+  </div>
+
+  <div class="hint">
+    <strong>Usage:</strong> Paste into a new Claude conversation. Attach the repo via drag-and-drop or use <code>claude --add ./</code> in Claude Code. The prompt instructs Claude to produce the entire brief in one pass — no back-and-forth required. Estimated output: 600–1200 words of dense, code-anchored analysis.
   </div>
 </div>
 
 <script>
-const PHASES = [
+/* ── SECTIONS ── */
+const SECTIONS = [
   {
-    id: 'p1', label: 'Domain & responsibility map', color: '#7c6af7', bg: '#2a2060',
-    opts: [
-      { id: 'bounded', label: 'Bounded context', on: true },
-      { id: 'ownership', label: 'Data ownership', on: true },
-      { id: 'sla', label: 'SLAs / reliability targets', on: false },
-      { id: 'consumers', label: 'Consumers & stakeholders', on: true },
-    ],
-    build(opts, cfg) {
-      return `## Phase 1 — Domain & responsibility map
+    id: 'domain',
+    name: 'Domain & ownership',
+    desc: 'mission · entities · boundaries',
+    on: true,
+    build(cfg, depth) {
+      const extra = depth === 'deep' ? `
+   - List all external teams / consumers that depend on this service
+   - Note any domain concepts that are shared with (or duplicated from) other services` : '';
+      return `### 1. Domain & ownership
+Produce the following — be specific, not generic:
 
-You are helping me understand **${cfg.svc || 'TARGET SERVICE'}** before I make any changes.
+**Mission** (one sentence): What does this service own that nothing else should?
 
-Start by mapping the domain:
+**Entities owned** (system-of-record list):
+List every entity/aggregate this service is authoritative for. For each, note the primary table/collection and one-line responsibility.
 
-1. What is the single-sentence mission of this service? What does it own that nothing else should?
-2. List all entities / aggregates this service is the system-of-record for.
-3. What are the explicit boundaries — what does this service intentionally NOT handle?
-${opts.sla ? '4. What are the SLAs, reliability targets, or error budgets for this service?\n' : ''
-}${opts.consumers ? `${[opts.sla].filter(Boolean).length + 4}. Who are the upstream callers and downstream consumers? (other services, frontends, async subscribers)\n` : ''
-}
-Output format:
-  • Mission: one sentence
-  • Owns: bulleted list
-  • Explicitly excludes: bulleted list
-${opts.consumers ? '  • Dependency map: callers → this service → downstream\n' : ''}`;
+**Explicit boundaries**:
+What does this service intentionally NOT handle? (i.e. what does it delegate to another service?)
+
+**Dependency sketch** (inline ASCII, 2–3 lines max):
+  [upstream callers] → ${cfg.svc || 'this service'} → [downstream consumers / events]
+${extra}`;
     }
   },
   {
-    id: 'p2', label: 'Architecture & entry points', color: '#3dd6c0', bg: '#0d2e2a',
-    opts: [
-      { id: 'entrypoints', label: 'Entry points (HTTP/gRPC/events)', on: true },
-      { id: 'layers', label: 'Layered architecture', on: true },
-      { id: 'infra', label: 'Infrastructure adapters', on: true },
-      { id: 'dirs', label: 'Directory structure walkthrough', on: true },
-    ],
-    build(opts, cfg) {
-      const svc = cfg.svc || 'this service';
-      return `## Phase 2 — Architecture & entry points
+    id: 'arch',
+    name: 'Architecture & entry points',
+    desc: 'layers · routes · adapters',
+    on: true,
+    build(cfg, depth) {
+      const extra = depth === 'deep' ? `
+**Non-obvious conventions**:
+List any project-specific patterns, naming conventions, or architectural decisions that would surprise a new engineer.` : '';
+      return `### 2. Architecture & entry points
 
-Walk me through the internal structure of ${svc}:
+**Entry points** (list every one with file path):
+  - HTTP/REST: \`METHOD /path\` → \`handler file:line\`
+  - gRPC: method name → handler
+  - Event consumers: topic/queue → handler file
+  - Scheduled tasks / cron: schedule → handler
 
-${opts.entrypoints ? `1. List every entry point:
-   - HTTP/REST routes (method + path + handler file)
-   - gRPC methods (if any)
-   - Event/message consumers (topic/queue name + handler)
-   - Cron jobs or scheduled tasks
-` : ''}${opts.layers ? `${[opts.entrypoints].filter(Boolean).length + 1}. Describe the layered architecture:
-   - Transport/protocol layer (what lives here?)
-   - Business logic / use-case layer
-   - Persistence / adapter layer
-   - Where are domain models defined?
-` : ''}${opts.infra ? `${[opts.entrypoints, opts.layers].filter(Boolean).length + 1}. List all infrastructure adapters:
-   - Databases and ORMs
-   - External HTTP clients (which services are called?)
-   - Message brokers
-   - Caches
-   - Feature-flag / config systems
-` : ''}${opts.dirs ? `${[opts.entrypoints, opts.layers, opts.infra].filter(Boolean).length + 1}. Walk me through the top-level directory structure. One sentence per directory. Flag any non-obvious conventions.
-` : ''}
-Draw an ASCII flow showing: entry point → business logic → persistence.`;
+**Layer map** (fill in real directory/file names):
+  \`Transport\`    → [dir or file]   # protocol handling, routing
+  \`Use cases\`    → [dir or file]   # business logic, commands/queries
+  \`Domain\`       → [dir or file]   # entities, value objects, rules
+  \`Adapters\`     → [dir or file]   # DB, HTTP clients, brokers, cache
+
+**Infrastructure adapters** (name the actual library/driver):
+  - Database: [ORM/driver + schema file location]
+  - External HTTP clients: [library + which services are called]
+  - Message broker: [library + topics]
+  - Cache: [library + what is cached]
+  - Config / feature flags: [how config is loaded]
+
+**Request flow** (ASCII, one representative happy path):
+  Entry → [middleware] → [use case] → [adapter] → response
+${extra}`;
     }
   },
   {
-    id: 'p3', label: 'Data model & persistence', color: '#f0a040', bg: '#2a1e00',
-    opts: [
-      { id: 'schema', label: 'Schema / entity overview', on: true },
-      { id: 'migrations', label: 'Migration strategy', on: true },
-      { id: 'indexes', label: 'Indexes & query patterns', on: false },
-      { id: 'events', label: 'Events / outbox pattern', on: false },
-    ],
-    build(opts, cfg) {
-      const svc = cfg.svc || 'this service';
-      return `## Phase 3 — Data model & persistence
+    id: 'data',
+    name: 'Data model & persistence',
+    desc: 'schemas · migrations · consistency',
+    on: true,
+    build(cfg, depth) {
+      const extra = depth === 'deep' ? `
+**Consistency risks**:
+List any eventual-consistency windows, dual-write patterns, or distributed transaction workarounds.` : depth === 'standard' ? `
+**Consistency risks** (one sentence each if any):` : '';
+      return `### 3. Data model & persistence
 
-How does ${svc} manage its data?
+**Schema overview** (one row per table/collection):
+  | Table/Collection | Purpose | Key columns | Notable constraints |
+  |---|---|---|---|
+  | ... | ... | ... | ... |
 
-${opts.schema ? `1. List all tables / collections / schemas this service owns.
-   For each: purpose, key columns, relationships, soft-delete or audit columns.
-` : ''}${opts.migrations ? `${[opts.schema].filter(Boolean).length + 1}. How are schema migrations managed?
-   - Migration tool used
-   - Naming/numbering conventions
-   - Any irreversible or risky past migrations I should know about?
-` : ''}${opts.indexes ? `${[opts.schema, opts.migrations].filter(Boolean).length + 1}. List the most important indexes and the queries they serve.
-   Any missing indexes or known performance concerns?
-` : ''}${opts.events ? `${[opts.schema, opts.migrations, opts.indexes].filter(Boolean).length + 1}. Does this service publish domain events?
-   - Event types and schemas
-   - Outbox pattern? How is at-least-once delivery guaranteed?
-` : ''}
-Summarise any data consistency risks (eventual consistency windows, dual-write patterns, etc.).`;
+**Migration strategy**:
+  - Tool: [e.g. Flyway, Alembic, golang-migrate]
+  - Location: [migration files directory]
+  - Naming convention: [example filename]
+  - Any irreversible or risky past migrations to be aware of?
+${extra}`;
     }
   },
   {
-    id: 'p4', label: 'Business logic deep dive', color: '#c084fc', bg: '#220a3a',
-    opts: [
-      { id: 'usecases', label: 'Core use cases / commands', on: true },
-      { id: 'invariants', label: 'Domain invariants / rules', on: true },
-      { id: 'fsm', label: 'State machines / lifecycles', on: false },
-      { id: 'edge', label: 'Edge cases & gotchas', on: true },
-    ],
-    build(opts, cfg) {
-      const svc = cfg.svc || 'this service';
-      return `## Phase 4 — Business logic deep dive
+    id: 'logic',
+    name: 'Business logic & invariants',
+    desc: 'use cases · rules · state machines',
+    on: true,
+    build(cfg, depth) {
+      const fsmBlock = depth !== 'concise' ? `
+**State machines / lifecycles** (if any):
+  For each stateful entity: list valid states and transitions.
+  Format: \`STATE_A --[trigger]--> STATE_B\`
+  Note any guards or side effects on transitions.` : '';
+      const edgeBlock = depth === 'deep' ? `
+**Known edge cases & gotchas**:
+  List scenarios where the logic is non-obvious or surprising. Include any legacy rules with historical context.` : '';
+      return `### 4. Business logic & invariants
 
-Go deep on the actual business rules in ${svc}:
+**Core use cases** (top 5–8, with file references):
+  For each: trigger → what it does → output (state change / event / response)
+  Cite the actual handler/service class and file path.
 
-${opts.usecases ? `1. List the top 5–8 core use cases / commands.
-   For each: what triggers it, what it does, what it produces (state change / event / response).
-` : ''}${opts.invariants ? `${[opts.usecases].filter(Boolean).length + 1}. List all domain invariants — rules that must never be violated.
-   Example: "an order cannot be cancelled after it ships."
-   For each: where is this enforced in code?
-` : ''}${opts.fsm ? `${[opts.usecases, opts.invariants].filter(Boolean).length + 1}. Are there entities with a lifecycle / state machine?
-   List all states and valid transitions. Note any guards or side effects.
-` : ''}${opts.edge ? `${[opts.usecases, opts.invariants, opts.fsm].filter(Boolean).length + 1}. What are the known edge cases, tricky scenarios, or non-obvious logic?
-   Include legacy business rules with historical context.
-` : ''}
-Show me the most important file(s) containing business logic and walk me through them.`;
+**Domain invariants** (rules that must never be violated):
+  For each invariant:
+  - Rule: [plain English]
+  - Enforced at: [file:function or layer name]
+  - Violation consequence: [what breaks]
+${fsmBlock}${edgeBlock}`;
     }
   },
   {
-    id: 'p5', label: 'Inter-service contracts & APIs', color: '#f87171', bg: '#2a0a0a',
-    opts: [
-      { id: 'publishes', label: 'Published API contracts', on: true },
-      { id: 'consumes', label: 'Consumed APIs & SDKs', on: true },
-      { id: 'versioning', label: 'Versioning & backward compat', on: true },
-      { id: 'errors', label: 'Error taxonomy', on: false },
-    ],
-    build(opts, cfg) {
-      const svc = cfg.svc || 'this service';
-      return `## Phase 5 — Inter-service contracts & APIs
+    id: 'contracts',
+    name: 'API contracts & dependencies',
+    desc: 'published API · consumed services · versioning',
+    on: true,
+    build(cfg, depth) {
+      const versionBlock = depth !== 'concise' ? `
+**Backward compatibility**:
+  How are breaking changes managed? Is there API versioning?
+  Which contracts are most fragile — highest risk if changed?` : '';
+      return `### 5. API contracts & dependencies
 
-Map the contracts ${svc} participates in:
+**Published API** (what this service exposes):
+  - REST endpoints: method, path, auth, request/response shape (abbreviated)
+  - gRPC methods: name + proto location
+  - Events published: topic name, schema summary, delivery guarantee
 
-${opts.publishes ? `1. What API does this service expose?
-   - REST: endpoints, request/response shapes, auth method
-   - gRPC: proto definitions and key message types
-   - Events published: topics, schemas, semantic guarantees
-` : ''}${opts.consumes ? `${[opts.publishes].filter(Boolean).length + 1}. What external services does this service depend on?
-   For each: purpose, failure handling (circuit breakers, retries, fallbacks).
-` : ''}${opts.versioning ? `${[opts.publishes, opts.consumes].filter(Boolean).length + 1}. How is backward compatibility managed?
-   - How are breaking changes communicated to consumers?
-   - Is API versioning used? How are multiple versions handled?
-` : ''}${opts.errors ? `${[opts.publishes, opts.consumes, opts.versioning].filter(Boolean).length + 1}. What is the error taxonomy?
-   - Error codes / types in the public API
-   - Which errors are retryable vs terminal?
-` : ''}
-Identify the most fragile contract — the one most likely to cause cascading failures if changed.`;
+**Consumed dependencies** (what this service calls):
+  | Service/API | Purpose | Failure handling |
+  |---|---|---|
+  | ... | ... | circuit breaker / retry / fallback |
+${versionBlock}`;
     }
   },
   {
-    id: 'p6', label: 'Testing & quality gates', color: '#4ade80', bg: '#082010',
-    opts: [
-      { id: 'testtypes', label: 'Test types & structure', on: true },
-      { id: 'contract', label: 'Contract / integration tests', on: false },
-      { id: 'ci', label: 'CI/CD pipeline', on: true },
-      { id: 'coverage', label: 'Coverage targets', on: false },
-    ],
-    build(opts, cfg) {
-      const svc = cfg.svc || 'this service';
-      return `## Phase 6 — Testing & quality gates
+    id: 'tests',
+    name: 'Testing & CI',
+    desc: 'test types · coverage · pipeline',
+    on: true,
+    build(cfg, depth) {
+      const coverageBlock = depth === 'deep' ? `
+**Coverage**:
+  - Current coverage % (if tracked)
+  - Areas with known low coverage and why` : '';
+      return `### 6. Testing & CI
 
-What is the test strategy for ${svc}?
+**Test structure** (with directory paths):
+  - Unit tests: [framework] at [dir] — what is / isn't unit-tested?
+  - Integration tests: [dir] — do they need a running DB or external services?
+  - E2E / contract tests: [dir or N/A]
 
-${opts.testtypes ? `1. What types of tests exist?
-   - Unit tests: framework used, what is / isn't tested
-   - Integration tests: what do they cover? Do they need a running DB or external services?
-   - E2E tests: how are they run? What environment?
-   - Walk me through the test directory structure.
-` : ''}${opts.contract ? `${[opts.testtypes].filter(Boolean).length + 1}. Are there contract tests (e.g. Pact, Spring Cloud Contract)?
-   - Which contracts are verified?
-   - How do I run them locally?
-` : ''}${opts.ci ? `${[opts.testtypes, opts.contract].filter(Boolean).length + 1}. Walk me through the CI/CD pipeline:
-   - What runs on every PR? (lint, test, build, scan)
-   - What are the merge gates?
-   - Deployment strategy (blue/green, canary, rolling)?
-` : ''}${opts.coverage ? `${[opts.testtypes, opts.contract, opts.ci].filter(Boolean).length + 1}. Test coverage targets — are they enforced in CI?
-   Which areas have low coverage and why?
-` : ''}
-What is the fastest feedback loop I can use while developing locally?`;
+**Local feedback loop**:
+  Command to run the full test suite locally: \`[command]\`
+  Command to run a single test file: \`[command]\`
+
+**CI/CD pipeline**:
+  On every PR: [lint / test / build / scan steps]
+  Merge gates: [required checks]
+  Deployment strategy: [rolling / blue-green / canary]
+${coverageBlock}`;
     }
   },
   {
-    id: 'p7', label: 'Observability & operations', color: '#38bdf8', bg: '#061824',
-    opts: [
-      { id: 'logs', label: 'Logging conventions', on: true },
-      { id: 'metrics', label: 'Key metrics & dashboards', on: true },
-      { id: 'tracing', label: 'Distributed tracing', on: false },
-      { id: 'alerts', label: 'Alerting & runbooks', on: false },
-    ],
-    build(opts, cfg) {
-      const svc = cfg.svc || 'this service';
-      return `## Phase 7 — Observability & operations
+    id: 'ops',
+    name: 'Observability & operations',
+    desc: 'logs · metrics · tracing · alerts',
+    on: false,
+    build(cfg, depth) {
+      const tracingBlock = depth !== 'concise' ? `
+**Distributed tracing**:
+  Tool: [Jaeger / Zipkin / OTLP / none]
+  How to trace a request across services: [query or UI link]` : '';
+      return `### 7. Observability & operations
 
-How is ${svc} monitored and debugged in production?
+**Logging**:
+  - Library: [e.g. winston, zerolog, loguru]
+  - Format: [JSON / structured / plaintext]
+  - Mandatory fields on every log line: [list]
+  - Correlation / trace ID field name: [field]
+  - How to query in production: [tool + example query]
 
-${opts.logs ? `1. Logging:
-   - Structured logging library used
-   - Logging conventions (format, levels, mandatory fields)
-   - How to query logs in production (Datadog, Splunk, CloudWatch, etc.)
-   - Correlation IDs / trace IDs propagated
-` : ''}${opts.metrics ? `${[opts.logs].filter(Boolean).length + 1}. Key metrics:
-   - Top 5–10 metrics emitted by this service
-   - Where are the dashboards? What do they show?
-   - What does "healthy" look like?
-` : ''}${opts.tracing ? `${[opts.logs, opts.metrics].filter(Boolean).length + 1}. Distributed tracing:
-   - Is tracing enabled? (Jaeger, Zipkin, OTLP?)
-   - How to trace a request end-to-end across services?
-` : ''}${opts.alerts ? `${[opts.logs, opts.metrics, opts.tracing].filter(Boolean).length + 1}. Alerts & runbooks:
-   - What alerts exist for this service?
-   - Summarise runbooks for common failure modes.
-` : ''}
-How would I debug a P1 incident in this service at 3 AM with minimal context?`;
+**Key metrics** (top 5):
+  | Metric name | What it measures | Alert threshold |
+  |---|---|---|
+  | ... | ... | ... |
+
+**Dashboard**: [link or location]
+**"Healthy" looks like**: [brief description]
+${tracingBlock}`;
     }
   },
   {
-    id: 'p8', label: 'Change readiness checklist', color: '#94a3b8', bg: '#141820',
-    opts: [
-      { id: 'risks', label: 'Change-specific risks', on: true },
-      { id: 'touchpoints', label: 'Files / components to modify', on: true },
-      { id: 'checklist', label: 'Pre-merge checklist', on: true },
-      { id: 'rollback', label: 'Rollback plan', on: false },
-    ],
-    build(opts, cfg) {
-      const goal = cfg.role ? ` (${cfg.role})` : '';
-      return `## Phase 8 — Change readiness checklist
+    id: 'change',
+    name: 'Change readiness',
+    desc: 'risks · touchpoints · checklist',
+    on: true,
+    build(cfg, depth) {
+      const rollbackBlock = depth !== 'concise' ? `
+**Rollback plan**:
+  - Can the change be feature-flagged off?
+  - Are there schema migrations that are hard to reverse?` : '';
+      return `### 8. Change readiness${cfg.role ? ` (goal: ${cfg.role})` : ''}
 
-Now that I understand the codebase, help me plan my actual change${goal}:
+**Top risks** for a change in this area:
+  1. [risk + which invariant or contract could be violated]
+  2. [risk]
+  3. [risk]
 
-${opts.risks ? `1. Top 3 risks of making a change in this area:
-   - Which invariants am I most likely to accidentally violate?
-   - What is the blast radius if something goes wrong?
-` : ''}${opts.touchpoints ? `${[opts.risks].filter(Boolean).length + 1}. Based on my goal, which files/modules will I need to touch?
-   List them with a one-line reason. Note non-obvious secondary files that usually need updating together.
-` : ''}${opts.checklist ? `${[opts.risks, opts.touchpoints].filter(Boolean).length + 1}. Pre-merge checklist for this service:
-   □ Tests to write or update
-   □ Documentation to update (OpenAPI spec, Confluence, README)
-   □ Migrations or schema changes needed
-   □ Feature flags or config changes
-   □ Monitoring / alerting updates
-   □ Consumer teams to notify
-` : ''}${opts.rollback ? `${[opts.risks, opts.touchpoints, opts.checklist].filter(Boolean).length + 1}. Rollback plan if my change causes a production issue:
-   - Can the change be feature-flagged off?
-   - Any migrations that are hard to reverse?
-` : ''}
-What is the one thing I should NOT do when working in this part of the codebase?`;
+**Files / modules to touch** (cite real paths):
+  | File | Why it needs to change |
+  |---|---|
+  | ... | ... |
+
+**Non-obvious secondaries**: files that usually need updating together but aren't obvious.
+
+**Pre-merge checklist** (specific to this service):
+  □ Tests: [which test files to add/update]
+  □ API docs: [OpenAPI spec location]
+  □ Migrations: [if needed]
+  □ Config / feature flags: [if needed]
+  □ Metrics / alerts: [if needed]
+  □ Consumer teams to notify: [if API/event contract changed]
+
+**The one thing NOT to do** in this part of the codebase:
+${rollbackBlock}`;
     }
   },
 ];
 
-// State
-const state = {};
-PHASES.forEach(p => {
-  state[p.id] = {};
-  p.opts.forEach(o => { state[p.id][o.id] = o.on; });
-});
+/* ── STATE ── */
+let depth = 'standard';
 
-// Build phase list
-function buildPhaseList() {
-  const list = document.getElementById('phases-list');
+const sectionState = {};
+SECTIONS.forEach(s => { sectionState[s.id] = s.on; });
+
+/* ── BUILD SECTION LIST ── */
+function buildSectionList() {
+  const list = document.getElementById('section-list');
   list.innerHTML = '';
-  PHASES.forEach(p => {
+  SECTIONS.forEach(s => {
     const div = document.createElement('div');
-    div.className = 'phase-item';
+    div.className = 'section-item' + (sectionState[s.id] ? ' on' : '');
+    div.dataset.id = s.id;
+    div.onclick = () => {
+      sectionState[s.id] = !sectionState[s.id];
+      div.classList.toggle('on', sectionState[s.id]);
+    };
     div.innerHTML = `
-      <div class="phase-header" onclick="togglePhase('${p.id}', this)">
-        <div class="phase-badge" style="background:${p.bg};color:${p.color}">${p.id.replace('p','')}</div>
-        <span class="phase-name">${p.label}</span>
-        <span class="phase-toggle">▾</span>
-      </div>
-      <div class="phase-opts" id="opts-${p.id}">
-        ${p.opts.map(o => `<span class="chip${state[p.id][o.id] ? ' on' : ''}" data-phase="${p.id}" data-opt="${o.id}" onclick="toggleOpt(this)">${o.label}</span>`).join('')}
-      </div>
+      <div class="section-dot"></div>
+      <span class="section-name">${s.name}</span>
+      <span class="section-desc">${s.desc}</span>
     `;
     list.appendChild(div);
   });
 }
 
-function togglePhase(id, header) {
-  const opts = document.getElementById('opts-' + id);
-  const arrow = header.querySelector('.phase-toggle');
-  const open = opts.classList.toggle('visible');
-  arrow.classList.toggle('open', open);
+/* ── DEPTH ── */
+function setDepth(el) {
+  document.querySelectorAll('.depth-btn').forEach(b => b.classList.remove('on'));
+  el.classList.add('on');
+  depth = el.dataset.d;
 }
 
-function toggleOpt(el) {
-  const { phase, opt } = el.dataset;
-  state[phase][opt] = !state[phase][opt];
-  el.classList.toggle('on', state[phase][opt]);
-}
-
-// Chip toggles
+/* ── CHIP TOGGLES ── */
 document.addEventListener('click', e => {
   const el = e.target;
-  if (!el.classList.contains('chip') || el.dataset.phase) return;
-  const g = el.dataset.g;
-  if (g === 'stack') { el.classList.toggle('on'); return; }
-  if (g === 'role') { el.classList.toggle('on'); return; }
+  if (!el.classList.contains('chip')) return;
+  el.classList.toggle('on');
 });
 
+/* ── CONFIG ── */
 function getConfig() {
   const stacks = [...document.querySelectorAll('[data-g="stack"].on')].map(e => e.textContent).join(', ');
-  const extra = document.getElementById('stack-extra').value.trim();
-  const roles = [...document.querySelectorAll('[data-g="role"].on')].map(e => e.textContent).join(', ');
+  const extra  = document.getElementById('stack-extra').value.trim();
+  const roles  = [...document.querySelectorAll('[data-g="role"].on')].map(e => e.textContent).join(', ');
   return {
-    svc: document.getElementById('svc').value.trim(),
+    svc:   document.getElementById('svc').value.trim(),
     stack: [stacks, extra].filter(Boolean).join(', '),
-    role: roles,
+    role:  roles,
   };
 }
 
+/* ── GENERATE ── */
 function generate() {
   const cfg = getConfig();
-  const parts = [];
+  const activeSections = SECTIONS.filter(s => sectionState[s.id]);
+  if (!activeSections.length) return;
 
-  parts.push(`# Codebase onboarding — ${cfg.svc || 'TARGET SERVICE'}
+  const depthNote = {
+    concise:  'Be concise — 1–2 sentences per sub-item, tables over prose where possible.',
+    standard: 'Be thorough but efficient — short prose where needed, tables for lists.',
+    deep:     'Go deep — explain not just what, but why. Surface tribal knowledge, historical context, and non-obvious decisions.',
+  }[depth];
+
+  const sectionBodies = activeSections.map(s => s.build(cfg, depth)).join('\n\n---\n\n');
+
+  const prompt =
+`# Codebase brief — ${cfg.svc || 'TARGET SERVICE'}
 ${cfg.stack ? `# Stack: ${cfg.stack}` : ''}
-${cfg.role ? `# Goal: ${cfg.role}` : ''}
-#
-# INSTRUCTIONS FOR CLAUDE
-# ───────────────────────────────────────────────────────────────
-# Work through every phase below in order.
-# For each phase, examine the ACTUAL codebase files provided.
-# Give concrete, code-specific answers — not generic advice.
-# Reference real file paths, class names, and function names.
-# After each phase, wait for follow-up questions before proceeding.
-# ───────────────────────────────────────────────────────────────
+${cfg.role  ? `# My goal: ${cfg.role}` : ''}
 
-`);
+## Instructions for Claude
 
-  PHASES.forEach(p => {
-    const opts = state[p.id];
-    const anyOn = Object.values(opts).some(Boolean);
-    if (!anyOn) return;
-    parts.push(p.build(opts, cfg));
-    parts.push('\n\n' + '─'.repeat(64) + '\n\n');
-  });
+You are a senior engineer helping me onboard to **${cfg.svc || 'this service'}** before I make changes to it.
+Produce a complete **Codebase Brief** by filling in every section below.
 
-  parts.push(`## Meta-instructions for every phase
+Ground rules — read these before you start:
+1. **Cite actual code.** Every claim must reference a real file path, class name, or function name from the codebase. Never give generic answers.
+2. **No padding.** If a section doesn't apply, say "N/A — [one-line reason]". Don't invent content.
+3. **Tables over prose** for lists. Use the table formats provided.
+4. **${depthNote}**
+5. Work top-to-bottom. Do not skip sections. Do not reorder sections.
+6. After the brief, add a single \`## Summary\` block: 3–5 bullets of the most important things I must know before touching this codebase.
 
-- Reference actual file paths and function names, not generic patterns.
-- If something is unclear, show me the relevant code before explaining it.
-- Highlight anything that is unusual, non-standard, or likely to surprise a new engineer.
-- Note any known technical debt, TODO comments, or areas the team considers risky.
-- If the codebase contradicts its own documentation, flag that explicitly.
+---
 
-> Start with Phase 1. I will say "next phase" when I am ready to proceed.
-`);
+${sectionBodies}
 
-  const text = parts.join('\n');
+---
 
-  // Render with syntax highlighting
-  const box = document.getElementById('output-box');
-  const esc = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  const html = esc
-    .replace(/(## Phase \d+ —[^\n]+)/g, '<span class="ph-head">$1</span>')
-    .replace(/(#{1,2} [^\n]+)/g, '<span class="ph-head">$1</span>')
-    .replace(/(   - [^\n]+)/g, '<span class="ph-sect">$1</span>')
-    .replace(/(   □ [^\n]+)/g, '<span class="ph-bullet">$1</span>')
-    .replace(/(^# [^\n]+)/gm, '<span style="color:#6b7080">$1</span>');
-  box.innerHTML = html;
+## Summary
+
+(After completing all sections above, write 3–5 bullets here.)
+Each bullet = one critical insight a new engineer must not miss.
+Examples of good summary bullets:
+  • "All orders go through the \`OrderStateMachine\` in \`src/domain/order.ts\` — bypassing it breaks the audit log."
+  • "The \`payments\` table is append-only; updates are forbidden by a DB trigger."
+  • "Service X is called synchronously in the checkout path — its P99 latency directly affects our SLA."`;
+
+  renderOutput(prompt, cfg, activeSections.length);
+}
+
+/* ── RENDER ── */
+function renderOutput(text, cfg, sectionCount) {
+  const box = document.getElementById('out');
   box._raw = text;
+
+  // Syntax colouring
+  const esc = text
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;');
+
+  const coloured = esc
+    // h1 lines starting with #
+    .replace(/^(# .+)$/gm, '<span class="t-h1">$1</span>')
+    // h2
+    .replace(/^(## .+)$/gm, '<span class="t-h2">$1</span>')
+    // h3
+    .replace(/^(### .+)$/gm, '<span class="t-h3">$1</span>')
+    // bold **...**
+    .replace(/\*\*([^*]+)\*\*/g, '<span class="t-key">**$1**</span>')
+    // checkboxes
+    .replace(/(□ .+)/g, '<span class="t-cb">$1</span>')
+    // inline code `...`
+    .replace(/`([^`]+)`/g, '<span class="t-em">`$1`</span>')
+    // separator lines
+    .replace(/^(---+)$/gm, '<span class="t-dim">$1</span>');
+
+  box.innerHTML = coloured;
+
+  // Update meta
+  const words = text.split(/\s+/).length;
+  document.getElementById('char-count').textContent = `~${words} words`;
+
+  const depthEl = document.getElementById('tag-mode');
+  depthEl.className = 'tag ' + (depth === 'deep' ? 'tag-amber' : 'tag-green');
+  depthEl.textContent = depth === 'deep' ? 'deep dive' : depth === 'concise' ? 'concise' : 'standard';
 }
 
+/* ── COPY ── */
 function copyPrompt() {
-  const box = document.getElementById('output-box');
-  const text = box._raw || box.textContent;
-  if (!text || !text.trim()) { generate(); return; }
-  navigator.clipboard.writeText(text).then(() => {
-    const btn = document.getElementById('copy-btn');
-    btn.textContent = 'Copied ✓';
-    setTimeout(() => btn.textContent = 'Copy to clipboard', 2000);
-  }).catch(() => {
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
+  const box = document.getElementById('out');
+  const text = box._raw;
+  if (!text) { generate(); return; }
+  navigator.clipboard.writeText(text).catch(() => {
+    const ta = Object.assign(document.createElement('textarea'), { value: text });
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove();
   });
+  const btn = document.getElementById('copy-btn');
+  btn.textContent = 'Copied ✓';
+  setTimeout(() => btn.textContent = 'Copy to clipboard', 2000);
 }
 
-buildPhaseList();
+/* ── INIT ── */
+buildSectionList();
 </script>
 </body>
 </html>
